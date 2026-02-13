@@ -1,0 +1,9 @@
+services:
+  app:
+    build: .
+    container_name: power_cost
+    ports:
+      - "10.0.0.231:8501:8501"
+    volumes:
+      - /mnt/Data/scripts/power_monitor/logs:/mnt/Data/scripts/power_monitor/logs:ro
+    restart: unless-stopped
