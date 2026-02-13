@@ -27,16 +27,25 @@ Install uv if you do not already have it:
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
+source $HOME/.local/bin/env
 ```
 
-After installation, make sure it is available in your shell:
+To make `uv` permanently available, add this line to your `~/.bashrc`
+or `~/.zshrc`:
 
 ```bash
-source $HOME/.local/bin/env   # bash / zsh
+echo 'source $HOME/.local/bin/env' >> ~/.bashrc
 ```
 
-To make this permanent, add the line above to your `~/.bashrc` or
-`~/.zshrc`.
+Skip the Streamlit welcome/email prompt:
+
+```bash
+mkdir -p ~/.streamlit
+cat > ~/.streamlit/credentials.toml << 'EOF'
+[general]
+email = ""
+EOF
+```
 
 ## Quick Start
 
@@ -44,6 +53,9 @@ To make this permanent, add the line above to your `~/.bashrc` or
 # Clone and enter the repository
 git clone git@github.com:ezetina86/power_cost.git
 cd power_cost
+
+# Activate uv (skip if already in your shell profile)
+source $HOME/.local/bin/env
 
 # Install dependencies
 uv sync
@@ -53,17 +65,6 @@ uv run streamlit run power_cost/app.py
 
 # Run the test suite
 uv run pytest
-```
-
-To skip the Streamlit welcome/email prompt on first run, create a
-credentials file:
-
-```bash
-mkdir -p ~/.streamlit
-cat > ~/.streamlit/credentials.toml << 'EOF'
-[general]
-email = ""
-EOF
 ```
 
 ## Project Layout
