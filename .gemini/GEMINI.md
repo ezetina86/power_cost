@@ -89,6 +89,29 @@ tests/
 - Write clear, imperative commit messages (e.g., "Add cost forecast module").
 - Squash-merge feature branches into dev.
 
+#### Git Workflow
+
+```mermaid
+flowchart LR
+    A["feature/name"] -->|squash-merge| B["dev"]
+    B -->|merge| C["main"]
+    C -->|delete feature branch| D["cleanup"]
+
+    style A fill:#f9a825,stroke:#f57f17,color:#000
+    style B fill:#42a5f5,stroke:#1565c0,color:#000
+    style C fill:#66bb6a,stroke:#2e7d32,color:#000
+    style D fill:#ef5350,stroke:#c62828,color:#fff
+```
+
+**Steps:**
+
+1. Create a feature branch from `dev`: `git checkout dev && git checkout -b feature/<name>`
+2. Develop and commit changes on the feature branch.
+3. Push and squash-merge into `dev`: `git checkout dev && git merge --squash feature/<name>`
+4. Push `dev` and merge into `main`: `git checkout main && git merge dev`
+5. Push `main` and delete the feature branch (local + remote).
+6. Switch back to `dev`.
+
 ### Logging
 
 - Use the standard library `logging` module exclusively.
@@ -103,16 +126,23 @@ tests/
 
 ## Architecture
 
-```
-power_monitor.log  -->  loader.py  -->  pandas DataFrame
-                                             |
-                                    +--------+--------+
-                                    |                 |
-                               stats.py         forecast.py
-                                    |                 |
-                                    +--------+--------+
-                                             |
-                                       dashboard.py  -->  Streamlit UI
+```mermaid
+flowchart TD
+    A["power_monitor.log"] -->|CSV ingestion| B["loader.py"]
+    B -->|validation + parsing| C["pandas DataFrame"]
+    C --> D["stats.py"]
+    C --> E["forecast.py"]
+    D -->|summary statistics| F["dashboard.py"]
+    E -->|cost projections| F
+    F -->|renders| G["Streamlit UI"]
+
+    style A fill:#78909c,stroke:#37474f,color:#fff
+    style B fill:#5c6bc0,stroke:#283593,color:#fff
+    style C fill:#26a69a,stroke:#00695c,color:#fff
+    style D fill:#7e57c2,stroke:#4527a0,color:#fff
+    style E fill:#ef5350,stroke:#c62828,color:#fff
+    style F fill:#ffa726,stroke:#e65100,color:#000
+    style G fill:#66bb6a,stroke:#2e7d32,color:#000
 ```
 
 ## Roadmap
@@ -125,4 +155,3 @@ power_monitor.log  -->  loader.py  -->  pandas DataFrame
 - [x] Build Streamlit dashboard with interactive charts.
 - [ ] Achieve 80 % test coverage.
 - [ ] Document usage in README.
-

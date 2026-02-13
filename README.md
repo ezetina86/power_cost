@@ -89,6 +89,27 @@ tests/
     test_forecast.py    Forecast tests
 ```
 
+## Architecture
+
+```mermaid
+flowchart TD
+    A["power_monitor.log"] -->|CSV ingestion| B["loader.py"]
+    B -->|validation + parsing| C["pandas DataFrame"]
+    C --> D["stats.py"]
+    C --> E["forecast.py"]
+    D -->|summary statistics| F["dashboard.py"]
+    E -->|cost projections| F
+    F -->|renders| G["Streamlit UI"]
+
+    style A fill:#78909c,stroke:#37474f,color:#fff
+    style B fill:#5c6bc0,stroke:#283593,color:#fff
+    style C fill:#26a69a,stroke:#00695c,color:#fff
+    style D fill:#7e57c2,stroke:#4527a0,color:#fff
+    style E fill:#ef5350,stroke:#c62828,color:#fff
+    style F fill:#ffa726,stroke:#e65100,color:#000
+    style G fill:#66bb6a,stroke:#2e7d32,color:#000
+```
+
 ## Configuration
 
 Key settings live in `power_cost/config.py`:
