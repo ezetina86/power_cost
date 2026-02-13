@@ -86,10 +86,6 @@ docker compose down
 docker build -t power_cost:latest . && docker compose up -d
 ```
 
-The container mounts `/mnt/Data/scripts/power_monitor/logs` read-only
-so it reads live data from the host. The dashboard is accessible at
-**http://10.0.0.231:8501**.
-
 ## Project Layout
 
 ```
