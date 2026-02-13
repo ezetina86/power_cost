@@ -5,7 +5,9 @@ Run with:
 """
 
 import logging
+from pathlib import Path
 
+import pandas as pd
 import streamlit as st
 
 from power_cost.config import LOG_FORMAT, LOG_LEVEL, LOG_PATH
@@ -22,10 +24,24 @@ st.set_page_config(
 )
 
 
+@st.cache_data
+def get_data(path: Path) -> pd.DataFrame:
+    """Load data with caching to avoid expensive I/O on every rerun.
+
+    Args:
+        path: Path to the CSV file.
+
+    Returns:
+        The loaded DataFrame.
+    """
+    return load_power_log(path)
+
+
 def main() -> None:
     """Load data and render the dashboard."""
     try:
-        df = load_power_log(LOG_PATH)
+        # Use cached loader to improve performance
+        df = get_data(LOG_PATH)
     except (FileNotFoundError, ValueError):
         logger.exception("Failed to load power log")
         st.error(
