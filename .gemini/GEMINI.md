@@ -117,11 +117,12 @@ power_monitor.log  -->  loader.py  -->  pandas DataFrame
 
 ## Roadmap
 
-- [ ] Define project scope and conventions (this file).
-- [ ] Set up project structure with uv and pyproject.toml.
-- [ ] Implement CSV data loader with validation.
-- [ ] Implement descriptive statistics module.
-- [ ] Implement cost forecasting logic.
-- [ ] Build Streamlit dashboard with interactive charts.
+- [x] Define project scope and conventions (this file).
+- [x] Set up project structure with uv and pyproject.toml.
+- [x] Implement CSV data loader with validation.
+- [x] Implement descriptive statistics module.
+- [x] Implement cost forecasting logic.
+- [x] Build Streamlit dashboard with interactive charts.
 - [ ] Achieve 80 % test coverage.
 - [ ] Document usage in README.
+
