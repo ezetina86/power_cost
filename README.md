@@ -70,7 +70,10 @@ uv run pytest
 ## Docker
 
 ```bash
-# Build and start the container
+# Build the image
+docker build -t power_cost:latest .
+
+# Start the container
 docker compose up -d
 
 # View logs
@@ -78,11 +81,14 @@ docker compose logs -f
 
 # Stop the container
 docker compose down
+
+# Rebuild after code changes
+docker build -t power_cost:latest . && docker compose up -d
 ```
 
 The container mounts `/mnt/Data/scripts/power_monitor/logs` read-only
 so it reads live data from the host. The dashboard is accessible at
-**http://localhost:8501**.
+**http://10.0.0.231:8501**.
 
 ## Project Layout
 
