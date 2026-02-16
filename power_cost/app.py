@@ -22,10 +22,16 @@ st.set_page_config(
 )
 
 
+@st.cache_data(ttl=60)
+def get_data(path):
+    """Load data with caching to prevent redundant I/O on reruns."""
+    return load_power_log(path)
+
+
 def main() -> None:
     """Load data and render the dashboard."""
     try:
-        df = load_power_log(LOG_PATH)
+        df = get_data(LOG_PATH)
     except (FileNotFoundError, ValueError):
         logger.exception("Failed to load power log")
         st.error(
