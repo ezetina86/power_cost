@@ -70,7 +70,7 @@ def _parse_timestamps(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         DataFrame with a DatetimeIndex.
     """
-    df = df.copy()
+    # Optimized: Avoid unnecessary copy as input df is already a fresh object
     df["Timestamp"] = pd.to_datetime(df["Timestamp"])
     df = df.set_index("Timestamp")
     return df
@@ -86,9 +86,9 @@ def _validate_values(df: pd.DataFrame) -> pd.DataFrame:
         Cleaned DataFrame.
     """
     initial_len = len(df)
-    df = df.dropna(subset=["CPU_Watts", "GPU_Watts"])
 
-    # Drop rows with negative watt values.
+    # Optimized: Combine NaN and negative value checks into a single mask
+    # Note: (df[...] >= 0) evaluates to False for NaNs, so this handles both cases.
     mask = (df["CPU_Watts"] >= 0) & (df["GPU_Watts"] >= 0)
     df = df[mask]
 
