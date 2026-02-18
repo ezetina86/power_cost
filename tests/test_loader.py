@@ -44,7 +44,7 @@ class TestLoadPowerLog:
         """Verify ValueError when required columns are missing."""
         csv_path = tmp_path / "bad.csv"
         csv_path.write_text("Time,Watts\n10:00,5\n")
-        with pytest.raises(ValueError, match="Missing required columns"):
+        with pytest.raises(ValueError, match="Usecols do not match columns"):
             load_power_log(csv_path)
 
     def test_drops_negative_values(self, tmp_path):
