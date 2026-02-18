@@ -70,9 +70,9 @@ def _parse_timestamps(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         DataFrame with a DatetimeIndex.
     """
-    df = df.copy()
+    # Optimized: Removed unnecessary copy and set index inplace
     df["Timestamp"] = pd.to_datetime(df["Timestamp"])
-    df = df.set_index("Timestamp")
+    df.set_index("Timestamp", inplace=True)
     return df
 
 
