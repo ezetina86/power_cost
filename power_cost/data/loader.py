@@ -34,31 +34,15 @@ def load_power_log(path: Path | None = None) -> pd.DataFrame:
         raise FileNotFoundError(msg)
 
     logger.info("Loading power log from %s", path)
-    df = pd.read_csv(path)
+    # Optimized: Use usecols to only read needed columns (also validates columns)
+    df = pd.read_csv(path, usecols=EXPECTED_COLUMNS)
 
-    _validate_columns(df)
     df = _parse_timestamps(df)
     df = _validate_values(df)
     df["Total_Watts"] = df["CPU_Watts"] + df["GPU_Watts"]
 
     logger.info("Loaded %d readings", len(df))
     return df
-
-
-def _validate_columns(df: pd.DataFrame) -> None:
-    """Ensure the DataFrame contains the expected columns.
-
-    Args:
-        df: Raw DataFrame to check.
-
-    Raises:
-        ValueError: If any required column is missing.
-    """
-    missing = set(EXPECTED_COLUMNS) - set(df.columns)
-    if missing:
-        msg = f"Missing required columns: {missing}"
-        logger.error(msg)
-        raise ValueError(msg)
 
 
 def _parse_timestamps(df: pd.DataFrame) -> pd.DataFrame:
@@ -70,9 +54,9 @@ def _parse_timestamps(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         DataFrame with a DatetimeIndex.
     """
-    # Optimized: Avoid unnecessary copy as input df is already a fresh object
+    # Optimized: Removed unnecessary copy and set index inplace
     df["Timestamp"] = pd.to_datetime(df["Timestamp"])
-    df = df.set_index("Timestamp")
+    df.set_index("Timestamp", inplace=True)
     return df
 
 
@@ -86,9 +70,7 @@ def _validate_values(df: pd.DataFrame) -> pd.DataFrame:
         Cleaned DataFrame.
     """
     initial_len = len(df)
-
-    # Optimized: Combine NaN and negative value checks into a single mask
-    # Note: (df[...] >= 0) evaluates to False for NaNs, so this handles both cases.
+    # Optimized: Single mask handles both negative values and NaNs (NaN >= 0 is False)
     mask = (df["CPU_Watts"] >= 0) & (df["GPU_Watts"] >= 0)
     df = df[mask]
 
