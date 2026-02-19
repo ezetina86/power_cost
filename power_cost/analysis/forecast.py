@@ -133,16 +133,16 @@ def compute_actual_consumption(
     # Each row represents ~1 minute of sampling.  Convert each reading
     # to kWh for that minute (1/60 of an hour) at the wall.
     minutes_factor = 1.0 / 60.0
-    wall_series = df["Total_Watts"] / psu_efficiency
-    actual_kwh = float((wall_series * minutes_factor / 1000.0).sum())
+
+    # Optimized: Sum first then multiply to reduce operations
+    kwh_factor = (1.0 / psu_efficiency) * minutes_factor / 1000.0
+    actual_kwh = float(df["Total_Watts"].sum() * kwh_factor)
     actual_cost = actual_kwh * rate
 
     # Day-by-day breakdown.
-    daily = df.copy()
-    daily["wall_watts"] = daily["Total_Watts"] / psu_efficiency
-    daily["kwh_per_minute"] = daily["wall_watts"] * minutes_factor / 1000.0
+    # Optimized: Removed unnecessary df copy and temporary columns
     daily_cost = (
-        daily["kwh_per_minute"]
+        (df["Total_Watts"] * kwh_factor)
         .resample("1D")
         .sum()
         .rename("daily_kwh")
