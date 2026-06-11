@@ -63,6 +63,9 @@ uv sync
 # Run the dashboard
 uv run streamlit run power_cost/app.py
 
+# Run the CLI
+uv run power-cost --rate 0.1587 --efficiency 0.90
+
 # Run the test suite
 uv run pytest
 ```
@@ -91,7 +94,7 @@ docker build -t power_cost:latest . && docker compose up -d
 ```
 power_cost/
     app.py              Streamlit entry point
-    cli.py              CLI entry point (placeholder)
+    cli.py              CLI entry point
     config.py           Settings and constants
     data/
         loader.py       CSV ingestion and validation
